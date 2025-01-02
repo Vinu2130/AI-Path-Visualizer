@@ -1,4 +1,5 @@
 import pygame
+from algos import pathFinder,DFS
 
 #initialize  the python game
 pygame.init()
@@ -24,7 +25,7 @@ starting = (1,8)
 ending = (8,1)
 obstacle1 = [(1,1),(2,1),(3,1),(3,2),(3,3),(3,4),(3,5),(3,6),(3,7),(2,7),(1,7)]
 obstacle2 = [(8,2),(7,2),(6,2),(5,2),(5,3),(5,4),(5,5),(5,6),(5,7),(5,8),(6,8),(7,8),(8,8)]
-path = [(2, 8), (3, 8), (4, 8), (4, 7), (4, 6), (4, 5), (4, 4), (4, 3), (4, 2), (4, 1), (5, 1), (6, 1), (7, 1)]
+# path = [(2, 8), (3, 8), (4, 8), (4, 7), (4, 6), (4, 5), (4, 4), (4, 3), (4, 2), (4, 1), (5, 1), (6, 1), (7, 1)]
 
 
 # creating the screen with 1000 x 1000 dimension
@@ -73,17 +74,25 @@ def drawObstacles(*obstacles):
     for obstacle in obstacles:
         fillPoints(obstacle,brown)
 
+# This method returns the path-finding algorithm based on the given choice
+def getPathFinderAlgorithm(choice:int)->pathFinder.AbstractPathFinder:
+    if choice == 1:
+        return DFS.DFSPathFinder(starting,ending,obstacle1,obstacle2)
+    else:
+        return pathFinder.defaultPathFinderClass() 
+    
 
 running = True
+
+pathFinderAlgorithm: pathFinder.AbstractPathFinder = getPathFinderAlgorithm(1)
+path = pathFinderAlgorithm.findPath()
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
     
     grid()
-
     drawPath(path)
 
     pygame.display.flip()
